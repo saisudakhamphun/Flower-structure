@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สื่อการเรียนรู้โต้ตอบ: โครงสร้างของดอกไม้</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        pinky: {
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Style for SVG Elements Interaction */
+        .part-clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .part-clickable:hover {
+            filter: drop-shadow(0px 0px 8px rgba(236, 72, 153, 0.8));
+            opacity: 0.9;
+        }
+        .part-selected {
+            filter: drop-shadow(0px 0px 10px rgba(34, 197, 94, 0.9)) !important;
+            stroke-width: 3px !important;
+        }
+        /* Pulse Animation for Pollen Grain */
+        @keyframes pulsePollen {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        .animate-pollen {
+            animation: pulsePollen 2.5s infinite ease-in-out;
+            transform-origin: center;
+        }
+    </style>
+</head>
+<body class="text-slate-800 bg-emerald-50/40 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-emerald-100 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-pink-500 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid font-bold text-xl fa-seedling"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl text-slate-800 leading-tight">โครงสร้างและส่วนประกอบของดอกไม้</h1>
+                    <p class="text-xs text-emerald-600 font-medium">สื่อการเรียนรู้แบบมีปฏิสัมพันธ์ (วิทยาศาสตร์ ม.ต้น)</p>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-sm font-medium">
+                <button id="tab-lab-btn" onclick="switchTab('lab')" class="px-4 py-2 rounded-lg flex items-center gap-2 transition-all bg-white text-emerald-600 shadow-sm">
+                    <i class="fa-solid fa-microscope"></i>
+                    <span>ห้องทดลอง & สำรวจ</span>
+                </button>
+                <button id="tab-quiz-btn" onclick="switchTab('quiz')" class="px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-600 hover:text-emerald-600">
+                    <i class="fa-solid fa-clipboard-question"></i>
+                    <span>แบบทดสอบ (3 ข้อ)</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- ================= TAB 1: LAB / INTERACTIVE DIAGRAM ================= -->
+        <section id="tab-lab" class="space-y-6">
+            
+            <!-- Controls Top Bar -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-emerald-100 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-2 text-slate-700 font-medium text-sm">
+                    <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">วิธีใช้งาน</span>
+                    <span>คลิกที่ส่วนต่างๆ ของดอกไม้เพื่อสำรวจโครงสร้างและหน้าที่</span>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <!-- Toggle View Mode Button -->
+                    <button id="toggle-view-btn" onclick="toggleView()" class="px-4 py-2 bg-pink-50 text-pink-600 hover:bg-pink-100 font-medium rounded-xl text-sm transition flex items-center gap-2 border border-pink-200">
+                        <i class="fa-solid fa-scissors"></i>
+                        <span id="view-mode-label">มุมมอง: ผ่าครึ่งดอกไม้ (Cross-Section)</span>
+                    </button>
+                    <!-- Reset Button -->
+                    <button onclick="resetSelection()" class="px-3 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl text-sm transition" title="รีเซ็ต">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Interactive Interactive SVG Canvas -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl shadow-sm border border-emerald-100 flex flex-col items-center justify-center relative min-h-[420px]">
+                    
+                    <div class="absolute top-4 left-4 bg-emerald-50/80 backdrop-blur border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-800 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span id="flower-type-badge">ชนิดดอก: ดอกสมบูรณ์เพศ (Perfect Flower)</span>
+                    </div>
+
+                    <!-- SVG Flower Diagram -->
+                    <svg id="flower-svg" viewBox="0 0 500 500" class="w-full max-w-[420px] h-auto drop-shadow-md select-none">
+                        <defs>
+                            <!-- Linear Gradients -->
+                            <linearGradient id="stemGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#4ade80" />
+                                <stop offset="100%" stop-color="#15803d" />
+                            </linearGradient>
+                            <linearGradient id="sepalGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#86efac" />
+                                <stop offset="100%" stop-color="#16a34a" />
+                            </linearGradient>
+                            <linearGradient id="petalGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#f472b6" />
+                                <stop offset="100%" stop-color="#db2777" />
+                            </linearGradient>
+                            <linearGradient id="petalBackGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#fbcfe8" />
+                                <stop offset="100%" stop-color="#f472b6" />
+                            </linearGradient>
+                            <linearGradient id="pistilGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#a7f3d0" />
+                                <stop offset="100%" stop-color="#059669" />
+                            </linearGradient>
+                            <linearGradient id="stamenGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#fde047" />
+                                <stop offset="100%" stop-color="#ca8a04" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Base / Stem (ก้านดอก) -->
+                        <g class="part-clickable" onclick="selectPart('stem')">
+                            <path d="M 240,360 L 240,470 A 10,10 0 0,0 260,470 L 260,360 Z" fill="url(#stemGrad)" stroke="#166534" stroke-width="2"/>
+                            <!-- Receptacle (ฐานรองดอก) -->
+                            <path d="M 210,340 C 210,380 290,380 290,340 C 300,340 310,350 310,355 C 290,385 210,385 190,355 C 190,350 200,340 210,340 Z" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+                        </g>
+
+                        <!-- Petals Background (กลีบดอกด้านหลัง) -->
+                        <g id="bg-petals" class="part-clickable" onclick="selectPart('petal')">
+                            <path d="M 250,340 C 120,300 70,180 140,110 C 200,160 220,260 250,340 Z" fill="url(#petalBackGrad)" stroke="#be185d" stroke-width="2"/>
+                            <path d="M 250,340 C 380,300 430,180 360,110 C 300,160 280,260 250,340 Z" fill="url(#petalBackGrad)" stroke="#be185d" stroke-width="2"/>
+                            <path d="M 250,340 C 200,180 180,60 250,40 C 320,60 300,180 250,340 Z" fill="url(#petalBackGrad)" stroke="#be185d" stroke-width="2"/>
+                        </g>
+
+                        <!-- Sepal Left & Right (กลีบเลี้ยง) -->
+                        <g id="sepals" class="part-clickable" onclick="selectPart('sepal')">
+                            <path d="M 210,340 C 140,340 100,290 120,260 C 150,290 190,320 220,345 Z" fill="url(#sepalGrad)" stroke="#15803d" stroke-width="2"/>
+                            <path d="M 290,340 C 360,340 400,290 380,260 C 350,290 310,320 280,345 Z" fill="url(#sepalGrad)" stroke="#15803d" stroke-width="2"/>
+                        </g>
+
+                        <!-- Stamens (เกสรเพศผู้) -->
+                        <!-- Left Stamen 1 -->
+                        <g class="part-clickable" onclick="selectPart('stamen')">
+                            <path d="M 235,330 Q 170,260 175,160" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Anther -->
+                            <ellipse cx="175" cy="155" rx="10" ry="14" fill="url(#stamenGrad)" stroke="#854d0e" stroke-width="2" transform="rotate(-20 175 155)"/>
+                            <!-- Pollen dots -->
+                            <circle cx="173" cy="153" r="2" fill="#fff" class="animate-pollen"/>
+                            <circle cx="177" cy="157" r="1.5" fill="#fff" class="animate-pollen"/>
+                        </g>
+                        <!-- Left Stamen 2 -->
+                        <g class="part-clickable" onclick="selectPart('stamen')">
+                            <path d="M 240,330 Q 195,250 205,180" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
+                            <ellipse cx="205" cy="175" rx="9" ry="13" fill="url(#stamenGrad)" stroke="#854d0e" stroke-width="2" transform="rotate(-10 205 175)"/>
+                        </g>
+                        <!-- Right Stamen 1 -->
+                        <g class="part-clickable" onclick="selectPart('stamen')">
+                            <path d="M 265,330 Q 330,260 325,160" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
+                            <ellipse cx="325" cy="155" rx="10" ry="14" fill="url(#stamenGrad)" stroke="#854d0e" stroke-width="2" transform="rotate(20 325 155)"/>
+                            <circle cx="323" cy="153" r="2" fill="#fff" class="animate-pollen"/>
+                        </g>
+                        <!-- Right Stamen 2 -->
+                        <g class="part-clickable" onclick="selectPart('stamen')">
+                            <path d="M 260,330 Q 305,250 295,180" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
+                            <ellipse cx="295" cy="175" rx="9" ry="13" fill="url(#stamenGrad)" stroke="#854d0e" stroke-width="2" transform="rotate(10 295 175)"/>
+                        </g>
+
+                        <!-- Pistil / Carpel (เกสรเพศเมีย) -->
+                        <g id="pistil-group" class="part-clickable" onclick="selectPart('pistil')">
+                            <!-- Style / ก้านเกสรเมีย -->
+                            <path d="M 242,320 L 243,150 L 257,150 L 258,320 Z" fill="url(#pistilGrad)" stroke="#047857" stroke-width="1.5"/>
+                            
+                            <!-- Stigma / ยอดเกสรตัวเมีย -->
+                            <g onclick="event.stopPropagation(); selectPart('stigma');">
+                                <path d="M 235,150 C 235,135 245,130 250,135 C 255,130 265,135 265,150 Z" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                                <!-- Sticky droplets -->
+                                <circle cx="243" cy="138" r="3" fill="#a7f3d0" opacity="0.8"/>
+                                <circle cx="257" cy="138" r="3" fill="#a7f3d0" opacity="0.8"/>
+                            </g>
+
+                            <!-- Ovary / รังไข่ Outer Wall -->
+                            <path id="ovary-wall" d="M 220,335 C 210,270 290,270 280,335 C 275,355 225,355 220,335 Z" fill="url(#pistilGrad)" stroke="#047857" stroke-width="2"/>
+
+                            <!-- CROSS SECTION INNER DETAILS (Ovary inside & Ovules) -->
+                            <g id="cross-section-details" class="transition-all duration-500 opacity-100">
+                                <!-- Inner Ovary Chamber Cutout -->
+                                <path d="M 228,332 C 222,280 278,280 272,332 C 268,348 232,348 228,332 Z" fill="#ecfdf5" stroke="#059669" stroke-width="1.5" stroke-dasharray="3,2"/>
+                                
+                                <!-- Ovules (ออวุล) -->
+                                <g onclick="event.stopPropagation(); selectPart('ovule');" class="part-clickable">
+                                    <ellipse cx="238" cy="310" rx="7" ry="10" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5" transform="rotate(-20 238 310)"/>
+                                    <ellipse cx="262" cy="310" rx="7" ry="10" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5" transform="rotate(20 262 310)"/>
+                                    <ellipse cx="240" cy="330" rx="7" ry="10" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5" transform="rotate(-30 240 330)"/>
+                                    <ellipse cx="260" cy="330" rx="7" ry="10" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5" transform="rotate(30 260 330)"/>
+                                </g>
+                            </g>
+                        </g>
+
+                        <!-- Petals Front (กลีบดอกด้านหน้า) -->
+                        <g id="fg-petals" class="part-clickable" onclick="selectPart('petal')">
+                            <path d="M 250,345 C 150,380 90,270 130,200 C 180,240 220,300 250,345 Z" fill="url(#petalGrad)" stroke="#be185d" stroke-width="2" opacity="0.95"/>
+                            <path d="M 250,345 C 350,380 410,270 370,200 C 320,240 280,300 250,345 Z" fill="url(#petalGrad)" stroke="#be185d" stroke-width="2" opacity="0.95"/>
+                        </g>
+                    </svg>
+
+                    <div class="mt-2 text-xs text-slate-400 text-center">
+                        <i class="fa-solid fa-hand-pointer animate-bounce mr-1"></i> คลิกที่องค์ประกอบบนภาพเพื่อดูรายละเอียด
+                    </div>
+                </div>
+
+                <!-- Right Column: Information Display Panel -->
+                <div class="lg:col-span-5 flex flex-col gap-4">
+                    
+                    <div id="info-card" class="bg-white p-6 rounded-3xl shadow-sm border border-emerald-100 flex-grow flex flex-col justify-between transition-all">
+                        <div>
+                            <!-- Header Info -->
+                            <div class="flex justify-between items-start border-b border-slate-100 pb-4 mb-4">
+                                <div>
+                                    <span id="part-tag" class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 uppercase tracking-wide">
+                                        คลิกเลือกส่วนประกอบ
+                                    </span>
+                                    <h2 id="part-title-th" class="text-2xl font-bold text-slate-800 mt-2">สัมผัสโครงสร้างดอกไม้</h2>
+                                    <h3 id="part-title-en" class="text-sm font-medium text-slate-400 italic">Interactive Flower Anatomy</h3>
+                                </div>
+                                <div id="part-icon" class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
+                                    <i class="fa-solid fa-seedling"></i>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">หน้าที่และความสำคัญ (Function)</h4>
+                                    <p id="part-desc" class="text-slate-600 text-sm leading-relaxed">
+                                        ยินดีต้อนรับสู่ห้องทดลองเสมือนจริง! คลิกเลือกส่วนประกอบต่างๆ บนตัวอย่างดอกไม้ด้านซ้าย เพื่อเรียนรู้ชื่อ หน้าที่ และความสำคัญของแต่ละส่วนประกอบได้เลย
+                                    </p>
+                                </div>
+
+                                <!-- Key Feature Highlight Box -->
+                                <div id="part-feature-box" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 hidden">
+                                    <h4 class="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1">
+                                        <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                                        <span>เกร็ดความรู้ ม.ต้น</span>
+                                    </h4>
+                                    <p id="part-feature" class="text-xs text-slate-600 leading-relaxed"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Classification Quick Summary -->
+                        <div class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-2 gap-3 text-center">
+                            <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+                                <span class="block text-[11px] text-emerald-600 font-medium">การจำแนกตามส่วนประกอบ</span>
+                                <span class="block text-xs font-bold text-slate-700 mt-0.5">ดอกสมบูรณ์ (Complete)</span>
+                            </div>
+                            <div class="bg-pink-50/60 p-2.5 rounded-xl border border-pink-100">
+                                <span class="block text-[11px] text-pink-600 font-medium">การจำแนกตามเกสร</span>
+                                <span class="block text-xs font-bold text-slate-700 mt-0.5">ดอกสมบูรณ์เพศ (Perfect)</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Knowledge Summary Accordion Card -->
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 p-5 rounded-3xl text-white shadow-md">
+                        <h3 class="font-bold text-sm flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-book-open text-emerald-200"></i>
+                            <span>สรุปเกณฑ์การจำแนกดอกไม้ (ระดับ ม.ต้น)</span>
+                        </h3>
+                        <ul class="text-xs space-y-1.5 text-emerald-50 opacity-90">
+                            <li>• <strong>ดอกสมบูรณ์ (Complete flower):</strong> มีครบ 4 ชั้น (กลีบเลี้ยง, กลีบดอก, เกสรผู้, เกสรเมีย)</li>
+                            <li>• <strong>ดอกสมบูรณ์เพศ (Perfect flower):</strong> มีทั้งเกสรเพศผู้และเกสรเพศเมียในดอกเดียวกัน</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= TAB 2: QUIZ SECTION ================= -->
+        <section id="tab-quiz" class="hidden max-w-3xl mx-auto space-y-6">
+            
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-emerald-100 text-center">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800">แบบทดสอบวัดความรู้เรื่อง โครงสร้างดอกไม้</h2>
+                <p class="text-slate-500 text-sm mt-1">ทดสอบความเข้าใจ 3 ข้อ พร้อมเฉลยและคำอธิบายอย่างละเอียด</p>
+            </div>
+
+            <!-- Quiz Form Container -->
+            <form id="quiz-form" onsubmit="submitQuiz(event)" class="space-y-6">
+                
+                <!-- Question 1 -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-emerald-500 text-white font-bold px-3 py-1 rounded-xl text-sm">ข้อ 1</span>
+                        <h3 class="font-semibold text-slate-800 text-base leading-snug">
+                            หากนักเรียนเด็ดดอกไม้ชนิดหนึ่งมาสังเกต พบว่ามี "กลีบเลี้ยง กลีบดอก และเกสรเพศผู้" แต่ไม่มีเกสรเพศเมีย ข้อใดสรุปเกี่ยวกับดอกไม้ชนิดนี้ได้ถูกต้องที่สุด?
+                        </h3>
+                    </div>
+                    
+                    <div class="space-y-2.5 pl-2 md:pl-10">
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q1" value="A" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" required>
+                            <span class="ml-3 text-sm text-slate-700">ก. เป็นทั้งดอกสมบูรณ์ และดอกสมบูรณ์เพศ</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q1" value="B" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ข. เป็นดอกไม่สมบูรณ์ แต่เป็นดอกสมบูรณ์เพศ</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q1" value="C" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ค. เป็นทั้งดอกไม่สมบูรณ์ และดอกไม่สมบูรณ์เพศ</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q1" value="D" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ง. เป็นดอกสมบูรณ์ แต่เป็นดอกไม่สมบูรณ์เพศ</span>
+                        </label>
+                    </div>
+
+                    <!-- Q1 Feedback Box -->
+                    <div id="feedback-q1" class="hidden p-4 rounded-2xl text-xs leading-relaxed mt-3"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-emerald-500 text-white font-bold px-3 py-1 rounded-xl text-sm">ข้อ 2</span>
+                        <h3 class="font-semibold text-slate-800 text-base leading-snug">
+                            ส่วนประกอบใดของดอกไม้ที่ทำหน้าที่เจริญเติบโตไปเป็น "เมล็ด (Seed)" หลังจากได้รับการปฏิสนธิเรียบร้อยแล้ว?
+                        </h3>
+                    </div>
+                    
+                    <div class="space-y-2.5 pl-2 md:pl-10">
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q2" value="A" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" required>
+                            <span class="ml-3 text-sm text-slate-700">ก. รังไข่ (Ovary)</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q2" value="B" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ข. ออวุล (Ovule)</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q2" value="C" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ค. อับเรณู (Anther)</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q2" value="D" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ง. ฐานรองดอก (Receptacle)</span>
+                        </label>
+                    </div>
+
+                    <!-- Q2 Feedback Box -->
+                    <div id="feedback-q2" class="hidden p-4 rounded-2xl text-xs leading-relaxed mt-3"></div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-emerald-500 text-white font-bold px-3 py-1 rounded-xl text-sm">ข้อ 3</span>
+                        <h3 class="font-semibold text-slate-800 text-base leading-snug">
+                            โครงสร้าง "ยอดเกสรเพศเมีย (Stigma)" มักจะมีลักษณะเหนียวหรือมีน้ำหวานเพราะเหตุใด?
+                        </h3>
+                    </div>
+                    
+                    <div class="space-y-2.5 pl-2 md:pl-10">
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q3" value="A" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" required>
+                            <span class="ml-3 text-sm text-slate-700">ก. เพื่อป้องกันแมลงไม่ให้เข้ามาดมกลิ่นดอกไม้</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q3" value="B" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ข. เพื่อดักจับละอองเรณู (Pollen) ที่ปลิวมาให้ติดอยู่ได้ง่าย</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q3" value="C" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ค. เพื่อสร้างอาหารเลี้ยงกลีบดอกไม้ให้ชุ่มชื้น</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 cursor-pointer transition">
+                            <input type="radio" name="q3" value="D" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-3 text-sm text-slate-700">ง. เพื่อใช้ในการสังเคราะห์ด้วยแสงสร้างน้ำตาล</span>
+                        </label>
+                    </div>
+
+                    <!-- Q3 Feedback Box -->
+                    <div id="feedback-q3" class="hidden p-4 rounded-2xl text-xs leading-relaxed mt-3"></div>
+                </div>
+
+                <!-- Submit Button / Score Board -->
+                <div class="flex flex-col items-center gap-4 pt-2">
+                    <button id="quiz-submit-btn" type="submit" class="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-emerald-200 hover:scale-[1.02] active:scale-[0.98] transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>ส่งคำตอบเพื่อตรวจคะแนน
+                    </button>
+
+                    <!-- Score Result Container (Initially hidden) -->
+                    <div id="score-container" class="hidden w-full bg-emerald-600 text-white p-6 rounded-3xl text-center space-y-2 shadow-lg">
+                        <span class="text-xs uppercase tracking-widest text-emerald-200 font-bold">ผลการทดสอบของคุณ</span>
+                        <div class="text-4xl font-extrabold" id="score-text">3 / 3</div>
+                        <p id="score-eval" class="text-sm text-emerald-100 font-medium">ยอดเยี่ยมมาก! คุณเข้าใจโครงสร้างดอกไม้อย่างแตกฉาน</p>
+                        <button type="button" onclick="resetQuiz()" class="mt-3 px-4 py-2 bg-white text-emerald-700 font-semibold rounded-xl text-xs hover:bg-emerald-50 transition">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> ทำแบบทดสอบอีกครั้ง
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
+        <p>สื่อการเรียนรู้วิทยาศาสตร์ชีวภาพ ระดับมัธยมศึกษาตอนต้น • Interactive Biology Learning Material</p>
+    </footer>
+
+    <!-- JavaScript Data and Interactive Logic -->
+    <script>
+        // Structural Data for Flower Parts
+        const flowerPartsData = {
+            sepal: {
+                titleTh: 'กลีบเลี้ยง',
+                titleEn: 'Sepal (Calyx)',
+                tag: 'ส่วนประกอบชั้นนอกสุด',
+                icon: 'fa-leaf',
+                desc: 'อยู่นอกสุดของดอก ส่วนใหญ่มีสีเขียวคล้ายใบ ทำหน้าที่ห่อหุ้มและป้องกันอันตรายให้แก่ส่วนประกอบภายในของดอกไม้ในขณะที่ดอกยังตูมอยู่',
+                feature: 'กลุ่มของกลีบเลี้ยงทั้งหมดจะเรียกว่า "วงกลีบเลี้ยง" (Calyx)'
+            },
+            petal: {
+                titleTh: 'กลีบดอก',
+                titleEn: 'Petal (Corolla)',
+                tag: 'ส่วนประกอบชั้นถัดมา',
+                icon: 'fa-spa',
+                desc: 'มักมีสีสันสวยงามและมีกลิ่นหอม หรือบางชนิดมีต่อมน้ำหวานที่โคนกลีบ ทำหน้าที่ล่อแมลงให้ช่วยถ่ายเรณู และช่วยห่อหุ้มเกสรในขณะที่ดอกยังไม่พร้อมเจริญพันธุ์',
+                feature: 'กลุ่มของกลีบดอกทั้งหมดเรียกว่า "วงกลีบดอก" (Corolla)'
+            },
+            stamen: {
+                titleTh: 'เกสรเพศผู้',
+                titleEn: 'Stamen (Androecium)',
+                tag: 'อวัยวะสืบพันธุ์เพศผู้',
+                icon: 'fa-circle-dot',
+                desc: 'ทำหน้าที่สร้างเซลล์สืบพันธุ์เพศผู้ ประกอบด้วย 2 ส่วนสำคัญคือ 1. อับเรณู (Anther) ที่บรรจุละอองเรณู (Pollen) และ 2. ก้านชูอับเรณู (Filament)',
+                feature: 'ละอองเรณู (Pollen grain) ทำหน้าที่เป็นเซลล์สืบพันธุ์เพศผู้ที่จะปลิวหรือติดไปกับแมลงเพื่อไปยังเกสรเพศเมีย'
+            },
+            pistil: {
+                titleTh: 'เกสรเพศเมีย',
+                titleEn: 'Pistil / Carpel (Gynoecium)',
+                tag: 'อวัยวะสืบพันธุ์เพศเมีย',
+                icon: 'fa-venus',
+                desc: 'ทำหน้าที่สร้างเซลล์สืบพันธุ์เพศเมีย ตั้งอยู่ตรงกลางสุดของดอก ประกอบด้วย ยอดเกสรเพศเมีย (Stigma), ก้านเกสรเพศเมีย (Style) และ รังไข่ (Ovary)',
+                feature: 'เกสรเพศเมียเป็นส่วนสำคัญที่จะเจริญต่อไปเป็นผลและเมล็ดหลังการปฏิสนธิ'
+            },
+            stigma: {
+                titleTh: 'ยอดเกสรเพศเมีย',
+                titleEn: 'Stigma',
+                tag: 'ส่วนยอดของเกสรเพศเมีย',
+                icon: 'fa-droplet',
+                desc: 'ส่วนบนสุดของเกสรเพศเมีย มักมีปุ่ม ขน หรือเมือกเหนียวๆ สำหรับดักจับละอองเรณูที่ปลิวมาตามลม หรือติดมากับตัวแมลง',
+                feature: 'น้ำหวานหรือเมือกบนยอดเกสรนอกจากช่วยยึดเกาะแล้ว ยังกระตุ้นให้ละอองเรณูงอกงาบลงไปหาออวุลด้วย'
+            },
+            ovule: {
+                titleTh: 'ออวุล',
+                titleEn: 'Ovule',
+                tag: 'โครงสร้างภายในรังไข่',
+                icon: 'fa-egg',
+                desc: 'โครงสร้างขนาดเล็กที่อยู่ภายในรังไข่ มีเซลล์ไข่ (Egg cell) ซึ่งเป็นเซลล์สืบพันธุ์เพศเมียอยู่ภายใน',
+                feature: 'สำคัญมาก! หลังการปฏิสนธิ (Fertilization) ออวุล จะเจริญเติบโตไปเป็น "เมล็ด (Seed)"'
+            },
+            stem: {
+                titleTh: 'ก้านดอกและฐานรองดอก',
+                titleEn: 'Pedicel & Receptacle',
+                tag: 'ฐานและโครงสร้างจุนเจือ',
+                icon: 'fa-cubes-stacked',
+                desc: 'ฐานรองดอก (Receptacle) ทำหน้าที่เป็นส่วนขยายปลายก้านดอกเพื่อรองรับส่วนประกอบต่างๆ ทั้งหมดของดอกไว้',
+                feature: 'ในผลไม้บางชนิด เช่น แอปเปิ้ล หรือฝรั่ง ฐานรองดอกนี้จะขยายใหญ่จนกลายเป็นเนื้อผลไม้ที่เราขบเคี้ยวรับประทาน'
+            }
+        };
+
+        let isCrossSectionVisible = true;
+
+        // Function to Switch Tabs
+        function switchTab(tabName) {
+            const labTab = document.getElementById('tab-lab');
+            const quizTab = document.getElementById('tab-quiz');
+            const labBtn = document.getElementById('tab-lab-btn');
+            const quizBtn = document.getElementById('tab-quiz-btn');
+
+            if (tabName === 'lab') {
+                labTab.classList.remove('hidden');
+                quizTab.classList.add('hidden');
+                
+                labBtn.className = "px-4 py-2 rounded-lg flex items-center gap-2 transition-all bg-white text-emerald-600 shadow-sm font-medium";
+                quizBtn.className = "px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-600 hover:text-emerald-600 font-medium";
+            } else {
+                quizTab.classList.remove('hidden');
+                labTab.classList.add('hidden');
+
+                quizBtn.className = "px-4 py-2 rounded-lg flex items-center gap-2 transition-all bg-white text-emerald-600 shadow-sm font-medium";
+                labBtn.className = "px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-600 hover:text-emerald-600 font-medium";
+            }
+        }
+
+        // Function to select interactive flower parts
+        function selectPart(partKey) {
+            const data = flowerPartsData[partKey];
+            if (!data) return;
+
+            // Remove selected class from all SVG paths
+            document.querySelectorAll('.part-selected').forEach(el => {
+                el.classList.remove('part-selected');
+            });
+
+            // Update UI Details Panel
+            document.getElementById('part-tag').innerText = data.tag;
+            document.getElementById('part-title-th').innerText = data.titleTh;
+            document.getElementById('part-title-en').innerText = data.titleEn;
+            document.getElementById('part-desc').innerText = data.desc;
+            
+            const featureBox = document.getElementById('part-feature-box');
+            document.getElementById('part-feature').innerText = data.feature;
+            featureBox.classList.remove('hidden');
+
+            document.getElementById('part-icon').innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+        }
+
+        // Toggle Cross-Section View
+        function toggleView() {
+            const crossSectionGroup = document.getElementById('cross-section-details');
+            const viewLabel = document.getElementById('view-mode-label');
+            const ovaryWall = document.getElementById('ovary-wall');
+
+            isCrossSectionVisible = !isCrossSectionVisible;
+
+            if (isCrossSectionVisible) {
+                crossSectionGroup.style.opacity = '1';
+                crossSectionGroup.style.pointerEvents = 'auto';
+                ovaryWall.setAttribute('fill', 'url(#pistilGrad)');
+                viewLabel.innerText = 'มุมมอง: ผ่าครึ่งดอกไม้ (Cross-Section)';
+            } else {
+                crossSectionGroup.style.opacity = '0';
+                crossSectionGroup.style.pointerEvents = 'none';
+                ovaryWall.setAttribute('fill', '#059669'); // Solid color when closed
+                viewLabel.innerText = 'มุมมอง: ดอกไม้ภายนอกปกติ';
+            }
+        }
+
+        // Reset Interactive Canvas View
+        function resetSelection() {
+            document.getElementById('part-tag').innerText = 'คลิกเลือกส่วนประกอบ';
+            document.getElementById('part-title-th').innerText = 'สัมผัสโครงสร้างดอกไม้';
+            document.getElementById('part-title-en').innerText = 'Interactive Flower Anatomy';
+            document.getElementById('part-desc').innerText = 'ยินดีต้อนรับสู่ห้องทดลองเสมือนจริง! คลิกเลือกส่วนประกอบต่างๆ บนตัวอย่างดอกไม้ด้านซ้าย เพื่อเรียนรู้ชื่อ หน้าที่ และความสำคัญของแต่ละส่วนประกอบได้เลย';
+            document.getElementById('part-feature-box').classList.add('hidden');
+            document.getElementById('part-icon').innerHTML = `<i class="fa-solid fa-seedling"></i>`;
+            
+            if (!isCrossSectionVisible) {
+                toggleView();
+            }
+        }
+
+        // Quiz Processing Logic
+        function submitQuiz(e) {
+            e.preventDefault();
+
+            const answers = {
+                q1: 'C',
+                q2: 'B',
+                q3: 'B'
+            };
+
+            const explanations = {
+                q1: {
+                    correct: 'ถูกต้อง! ดอกไม้ที่มีขาดเกสรเพศเมีย (มีไม่ครบ 4 ส่วน) จึงจัดเป็น "ดอกไม่สมบูรณ์" และการที่มีเกสรเพียงเพศเดียวในดอก จึงจัดเป็น "ดอกไม่สมบูรณ์เพศ" ด้วยเช่นกัน',
+                    incorrect: 'ยังไม่ถูกต้อง! การขาดเกสรเพศเมียไป ทำให้มีส่วนประกอบไม่ครบ 4 วง (ดอกไม่สมบูรณ์) และมีเกสรเพียงเพศเดียว (ดอกไม่สมบูรณ์เพศ)'
+                },
+                q2: {
+                    correct: 'ถูกต้อง! หลังได้รับการผสมพันธุ์ "ออวุล (Ovule)" จะเจริญไปเป็น "เมล็ด" ส่วน "รังไข่ (Ovary)" จะเจริญไปเป็น "ผลไม้"',
+                    incorrect: 'ยังไม่ถูกต้อง! คำตอบที่ถูกคือ "ออวุล (Ovule)" ซึ่งจะเจริญไปเป็นเมล็ดหลังการปฏิสนธิ (ส่วนรังไข่จะเจริญเป็นผล)'
+                },
+                q3: {
+                    correct: 'ถูกต้อง! ความเหนียวและน้ำหวานบนยอดเกสรเพศเมียมีไว้เพื่อดักจับละอองเรณูที่ปลิวมาตามลมหรือติดมากับแมลง และช่วยกระตุ้นการงอกของสายเรณู',
+                    incorrect: 'ยังไม่ถูกต้อง! เมือกเหนียวบนยอดเกสรเพศเมียมีหน้าที่หลักในการ "ดักจับละอองเรณู" ไม่ให้ปลิวหลุดหายไป'
+                }
+            };
+
+            let score = 0;
+            const formData = new FormData(e.target);
+
+            // Validate and Display Feedback
+            ['q1', 'q2', 'q3'].forEach((qKey, index) => {
+                const userAns = formData.get(qKey);
+                const feedbackEl = document.getElementById(`feedback-${qKey}`);
+                feedbackEl.classList.remove('hidden', 'bg-emerald-50', 'bg-rose-50', 'text-emerald-800', 'text-rose-800', 'border-emerald-200', 'border-rose-200');
+
+                if (userAns === answers[qKey]) {
+                    score++;
+                    feedbackEl.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+                    feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> <strong>คำตอบถูกต้อง!</strong> ${explanations[qKey].correct}`;
+                } else {
+                    feedbackEl.classList.add('bg-rose-50', 'text-rose-800', 'border', 'border-rose-200');
+                    feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 mr-1.5"></i> <strong>ยังไม่ถูกต้อง:</strong> ${explanations[qKey].incorrect}`;
+                }
+            });
+
+            // Show Score Box
+            const scoreContainer = document.getElementById('score-container');
+            const scoreText = document.getElementById('score-text');
+            const scoreEval = document.getElementById('score-eval');
+            
+            scoreText.innerText = `${score} / 3`;
+            if (score === 3) {
+                scoreEval.innerText = '🎉 ยอดเยี่ยมมาก! คุณได้คะแนนเต็มและเข้าใจโครงสร้างดอกไม้อย่างแตกฉาน';
+            } else if (score >= 1) {
+                scoreEval.innerText = '👍 เก่งมาก! ทบทวนจุดที่ผิดพลาดในเฉลยด้านบนเพื่อความเข้าใจที่สมบูรณ์นะ';
+            } else {
+                scoreEval.innerText = '💪 ไม่เป็นไรนะ! ย้อนกลับไปส่องดูส่วนประกอบในห้องทดลองแล้วลองทำใหม่อีกครั้ง';
+            }
+
+            scoreContainer.classList.remove('hidden');
+            document.getElementById('quiz-submit-btn').classList.add('hidden');
+        }
+
+        // Reset Quiz Form
+        function resetQuiz() {
+            document.getElementById('quiz-form').reset();
+            ['q1', 'q2', 'q3'].forEach(qKey => {
+                const feedbackEl = document.getElementById(`feedback-${qKey}`);
+                feedbackEl.classList.add('hidden');
+            });
+            document.getElementById('score-container').classList.add('hidden');
+            document.getElementById('quiz-submit-btn').classList.remove('hidden');
+        }
+
+        // Default Load Init
+        window.onload = function() {
+            resetSelection();
+        };
+    </script>
+</body>
+</html>
